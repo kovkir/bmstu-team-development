@@ -1,6 +1,7 @@
 from tkinter import Tk, Canvas, Label, Entry, Button, Radiobutton, \
     messagebox, BooleanVar, DISABLED, NORMAL, END
 
+from chess import Chess, EMPTY, MOVE_DONE
 from color import *
 
 
@@ -27,6 +28,8 @@ class Window():
 
     colorVar: BooleanVar
 
+    chess: Chess
+
 
     def __init__(self, windowWidth: int, windowHeight: int, 
                        canvasWidth: int, canvasHeight: int):
@@ -37,6 +40,7 @@ class Window():
 
         self.createInterface(canvasWidth, True)
         self.fillEntries()
+        self.chess = Chess(self.canvas, canvasWidth, canvasHeight, True)
 
 
     def createWindow(self, windowWidth: int, windowHeight: int):
@@ -245,4 +249,6 @@ class Window():
 
 
     def run(self):
+        self.chess.drawChessBoard()
+
         self.window.mainloop()
