@@ -248,7 +248,41 @@ class Window():
         self.yEntry.config(state = DISABLED)
 
 
+    def chooseCell(self, xEvent, yEvent):
+        xCell, yCell = self.chess.chooseСell(xEvent, yEvent)
+
+        if xCell == EMPTY:
+            self.cancelChooseCell()
+        else:
+            self.clearXYEntry()
+            self.fillXYEntry(xCell, yCell)
+
+
+    def cancelChooseCell(self):
+        self.chess.cancelChooseCell()
+        self.clearXYEntry()
+
+
+    def chooseCellEvent(self, event):
+        if self.chess.isMyMove():
+            x = event.x
+            y = event.y
+
+            self.chooseCell(x, y)
+
+
+    def cancelChooseCellEvent(self):
+        if self.chess.isMyMove():
+            self.cancelChooseCell()
+
+
     def run(self):
         self.chess.drawChessBoard()
 
+        self.canvas.bind('<1>', # левая кнопка мыши
+            lambda event: self.chooseCellEvent(event))
+
+        self.canvas.bind('<2>', # правая кнопка мыши 
+            lambda event: self.cancelChooseCellEvent())
+        
         self.window.mainloop()
