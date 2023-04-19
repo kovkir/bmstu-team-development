@@ -1,5 +1,6 @@
 from tkinter import Canvas, messagebox, CENTER
 
+from chessPieces.chessPiece import ChessPiece
 from color import *
 
 
@@ -59,7 +60,55 @@ class Chess:
     def createChessPieces(self, color: str):
         chessPieces = list()
 
+         # номера строк доски для расположения фигур
+        if self.mainWhiteСolor:
+            indStrPawns = 6 if color == WHITE_CHESS_PIECE else 1
+            indStrOtherPieces = 7 if color == WHITE_CHESS_PIECE else 0
+        else:
+            indStrPawns = 6 if color == BLACK_CHESS_PIECE else 1
+            indStrOtherPieces = 7 if color == BLACK_CHESS_PIECE else 0
+
+        # создание пешек
+        for i in range(8):
+            pawn = ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+                "Pawn", color, i, indStrPawns)
+            chessPieces.append(pawn)
+
+        # создание ладей
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Rook", color, 0, indStrOtherPieces))
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Rook", color, 7, indStrOtherPieces))
+
+        # создание коней
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Horse", color, 1, indStrOtherPieces))
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Horse", color, 6, indStrOtherPieces))
+
+        # создание слонов
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Elephant", color, 2, indStrOtherPieces))
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Elephant", color, 5, indStrOtherPieces))
+
+        # создание ферзя
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "Queen", color, 3, indStrOtherPieces))
+        
+        # создание короля
+        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            "King", color, 4, indStrOtherPieces))
+        
         return chessPieces
+
+
+    def drawChessPieces(self):
+        for piece in self.wChessPieces:
+            piece.drawPiece()
+
+        for piece in self.bChessPieces:
+            piece.drawPiece()
 
 
     def drawChessBoard(self):
