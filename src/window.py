@@ -276,6 +276,14 @@ class Window():
             self.cancelChooseCell()
 
 
+    def changeСolorСhessPieces(self):
+        self.clearXYEntry()
+
+        self.chess.flipChessBoard(self.colorVar.get())
+        self.chess.drawChessBoard()
+        self.chess.drawChessPieces()
+
+
     def run(self):
         self.chess.drawChessBoard()
         self.chess.drawChessPieces()
