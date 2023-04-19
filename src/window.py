@@ -278,6 +278,7 @@ class Window():
 
     def run(self):
         self.chess.drawChessBoard()
+        self.chess.drawChessPieces()
 
         self.canvas.bind('<1>', # левая кнопка мыши
             lambda event: self.chooseCellEvent(event))
