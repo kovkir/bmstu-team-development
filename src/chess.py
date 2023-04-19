@@ -143,6 +143,17 @@ class Chess:
 
             x = self.xLeftChessBoard
             y += self.sizeCell
+
+    
+    def flipChessBoard(self, mainWhiteСolor: bool):
+        self.mainWhiteСolor = mainWhiteСolor
+        self.cancelChooseCell()
+
+        for piece in self.wChessPieces:
+            piece.yCell = 7 - piece.yCell
+
+        for piece in self.bChessPieces:
+            piece.yCell = 7 - piece.yCell
     
 
     def searchNewСell(self, xEvent: int, yEvent: int):
@@ -194,6 +205,6 @@ class Chess:
         self.xCurСell = EMPTY
         self.yCurСell = EMPTY
 
-        
+
     def isMyMove(self):
         return self.mainWhiteСolor == self.activeWhitePlayer
