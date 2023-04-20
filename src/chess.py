@@ -3,6 +3,7 @@ from tkinter import Canvas, messagebox, CENTER
 from chessPieces.chessPiece import ChessPiece
 from chessPieces.queen import Queen
 from chessPieces.king import King
+from chessPieces.pawn import Pawn
 from color import *
 
 
@@ -72,7 +73,7 @@ class Chess:
 
         # создание пешек
         for i in range(8):
-            pawn = ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+            pawn = Pawn(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
                 "Pawn", color, i, indStrPawns)
             chessPieces.append(pawn)
 
