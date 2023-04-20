@@ -59,12 +59,16 @@ class Chess:
         self.alphabet = ["A", "B", "C", "D", "E", "F", "G", "H"]
         self.wChessPieces = self.createChessPieces(WHITE_CHESS_PIECE)
         self.bChessPieces = self.createChessPieces(BLACK_CHESS_PIECE)
-    
+        self.calculateMovement()
+
     
     def createChessPieces(self, color: str):
+        '''
+        Получение списка шахматных фигур заданного цвета 
+        '''
         chessPieces = list()
 
-         # номера строк доски для расположения фигур
+        # номера строк доски для расположения фигур
         if self.mainWhiteСolor:
             indStrPawns = 6 if color == WHITE_CHESS_PIECE else 1
             indStrOtherPieces = 7 if color == WHITE_CHESS_PIECE else 0
@@ -108,6 +112,9 @@ class Chess:
 
 
     def drawChessPieces(self):
+        '''
+        Отображение фигур на шахматной доске
+        '''
         for piece in self.wChessPieces:
             piece.drawPiece()
 
@@ -116,6 +123,9 @@ class Chess:
 
 
     def drawChessBoard(self):
+        '''
+        Отображение шахматной доски
+        '''
         x = self.xLeftChessBoard
         y = self.yTopChessBoard
 
@@ -150,6 +160,9 @@ class Chess:
 
     
     def flipChessBoard(self, mainWhiteСolor: bool):
+        '''
+        Перевернуть шаматную доску
+        '''
         self.mainWhiteСolor = mainWhiteСolor
         self.cancelChooseCell()
 
@@ -158,9 +171,14 @@ class Chess:
 
         for piece in self.bChessPieces:
             piece.yCell = 7 - piece.yCell
+
+        self.calculateMovement()
     
 
     def searchNewСell(self, xEvent: int, yEvent: int):
+        '''
+        Нахождение координат выбранной клетки
+        '''
         xNewСell = EMPTY
         yNewСell = EMPTY
 
@@ -177,38 +195,149 @@ class Chess:
         return xNewСell, yNewСell
     
 
+    def cellIsNotEmpty(self, xСell: int, yСell: int, isColorWhite: bool):
+        '''
+        Проверка, что нажали на фигуру ходящего игрока
+        '''
+        if isColorWhite:
+            for piece in self.wChessPieces:
+                if piece.isMy(xСell, yСell):
+                    return True
+        else:
+            for piece in self.bChessPieces:
+                if piece.isMy(xСell, yСell):
+                    return True
+        
+        return False
+    
+
     def getCurСell(self):
+        '''
+        Нахождение координат для вывода в окне "Выбранная фигура"
+        '''
         if self.xCurСell >= 0 and \
            self.yCurСell >= 0:
-
+            # нажали на фигуру ходящего игрока
             xCell = self.alphabet[self.xCurСell]
             yCell = str(8 - self.yCurСell)
-        else:
+            
+        elif self.xCurСell == EMPTY or \
+             self.yCurСell == EMPTY:
+            # игрок тыкнул вне доски
             xCell = EMPTY
             yCell = EMPTY
+        else:
+            # игрок сделал ход
+            xCell = MOVE_DONE
+            yCell = MOVE_DONE
 
         return xCell, yCell
     
 
+    def getPiece(self, xСell: int, yСell: int, isColorWhite: bool):
+        '''
+        Возвращает фигуру, которая делает ход
+        '''
+        if isColorWhite:
+            for piece in self.wChessPieces:
+                if piece.isMy(xСell, yСell):
+                    return piece
+        else:
+            for piece in self.bChessPieces:
+                if piece.isMy(xСell, yСell):
+                    return piece
+    
+
+    def checkMovement(self, currPiece: ChessPiece, xNewCell: int, yNewCell: int):
+        '''
+        Проверяем xNewCell, yNewCell на присутствие в списке 
+        возможных ходов. Далее для каждой фигуры вызывается соответствующая 
+        ей функция, которая делает уникальные проверки
+        '''
+        if currPiece.name == "Pawn":
+            currPiece.firstTurn = False
+
+        print(currPiece.name, currPiece.movement, "\n")
+
+        if [xNewCell, yNewCell] in currPiece.movement:
+            print("Находится в списке ходов")
+            return True
+        else:
+            print("Не находится в списке ходов")
+            return False
+        
+
+    def movePiece(self, xNewСell: int, yNewСell: int):
+        '''
+        Игрок делает ход
+        '''
+        # фигура, которая делает ход
+        currPiece = self.getPiece(self.xCurСell, self.yCurСell, self.activeWhitePlayer)
+
+        if self.checkMovement(currPiece, xNewСell, yNewСell):
+            # если пытаемся съесть фигуру соперника
+            # if self.cellIsNotEmpty(xNewСell, yNewСell, not self.activeWhitePlayer):
+
+            # перемещение фигуры
+            currPiece.setCell(xNewСell, yNewСell)
+            # ход переходит к следующему игроку
+            self.activeWhitePlayer = not self.activeWhitePlayer
+        else:
+            messagebox.showinfo("Ошибка",
+                "Выбранная фигура не может ходить в эту клетку.")
+            
+
     def chooseСell(self, xEvent: int, yEvent: int):
+        '''
+        Игрок пытается выбрать клетку шахматной доски
+        '''
         if xEvent < self.xLeftChessBoard or xEvent > self.xRightChessBoard or \
            yEvent < self.yTopChessBoard  or yEvent > self.yBottomChessBoard:
-            
+            # игрок тыкнул вне доски
             self.xCurСell = EMPTY
             self.yCurСell = EMPTY
         else:
+            # координаты выбранной клетки
             xNewСell, yNewСell = self.searchNewСell(xEvent, yEvent)
 
-            self.xCurСell = xNewСell 
-            self.yCurСell = yNewСell
+            if self.cellIsNotEmpty(xNewСell, yNewСell, self.activeWhitePlayer):
+                # нажали на фигуру ходящего игрока
+                self.xCurСell = xNewСell 
+                self.yCurСell = yNewСell
+
+            elif self.xCurСell != EMPTY and self.yCurСell != EMPTY:
+                # игрок делает ход
+                self.movePiece(xNewСell, yNewСell)
+
+                self.xCurСell = MOVE_DONE
+                self.yCurСell = MOVE_DONE
 
         return self.getCurСell()
 
 
     def cancelChooseCell(self):
+        '''
+        Игрок отменяет прошлый выбор клетки шахматной доски
+        '''
         self.xCurСell = EMPTY
         self.yCurСell = EMPTY
 
 
+    def calculateMovement(self):
+        '''
+        Нахождение списка всех возможных ходов для каждой фигуры 
+        (без учета расположения других фигур)
+        '''
+        for piece in self.wChessPieces:
+            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer)
+
+        for piece in self.bChessPieces:
+            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer)
+
+
     def isMyMove(self):
+        '''
+        Проверка, что сейчас ход игрока, чьи фигуры отображены 
+        внизу шахматной доски (ходить может только такой игрок)
+        '''
         return self.mainWhiteСolor == self.activeWhitePlayer

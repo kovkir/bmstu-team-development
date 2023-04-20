@@ -30,7 +30,7 @@ class Pawn(ChessPiece):
 
     def drawPiece(self):
         self.drawPawn(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                          self.yTopChessBoard  + self.yCell * self.sizeCell)
+                      self.yTopChessBoard  + self.yCell * self.sizeCell)
                           
 
     def drawPawn(self, x, y):
@@ -47,3 +47,18 @@ class Pawn(ChessPiece):
             x + self.sizeCell * 0.72, y + self.sizeCell * 1.2,
             start = 0, extent = 180, outline = self.colorBorder, fill = self.color, width = 2
         )
+
+    
+    # нахождение списка всех возможных ходов пешки без учета расположения других фигур
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+        self.movement.clear()
+
+        step = -1 if mainWhiteСolor == activeWhitePlayer else 1
+
+        # добавление ходов вперед
+        for i in range(-1, 2, 1):
+            self.movement.append([self.xCell + i, self.yCell + step])
+
+        # при первом ходе пешка может ходить на 2 клетки вперед
+        if self.firstTurn:
+            self.movement.append([self.xCell, self.yCell + (step * 2)])
