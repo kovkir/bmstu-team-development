@@ -1,6 +1,7 @@
 from tkinter import Canvas, messagebox, CENTER
 
 from chessPieces.chessPiece import ChessPiece
+from chessPieces.queen import Queen
 from color import *
 
 
@@ -93,7 +94,7 @@ class Chess:
             "Elephant", color, 5, indStrOtherPieces))
 
         # создание ферзя
-        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+        chessPieces.append(Queen(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
             "Queen", color, 3, indStrOtherPieces))
         
         # создание короля
