@@ -2,6 +2,7 @@ from tkinter import Canvas, messagebox, CENTER
 
 from chessPieces.chessPiece import ChessPiece
 from chessPieces.queen import Queen
+from chessPieces.king import King
 from color import *
 
 
@@ -98,7 +99,7 @@ class Chess:
             "Queen", color, 3, indStrOtherPieces))
         
         # создание короля
-        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+        chessPieces.append(King(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
             "King", color, 4, indStrOtherPieces))
         
         return chessPieces
