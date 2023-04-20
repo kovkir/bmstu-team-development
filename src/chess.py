@@ -4,6 +4,7 @@ from chessPieces.chessPiece import ChessPiece
 from chessPieces.queen import Queen
 from chessPieces.king import King
 from chessPieces.pawn import Pawn
+from chessPieces.rook import Rook
 from color import *
 
 
@@ -78,9 +79,9 @@ class Chess:
             chessPieces.append(pawn)
 
         # создание ладей
-        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+        chessPieces.append(Rook(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
             "Rook", color, 0, indStrOtherPieces))
-        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+        chessPieces.append(Rook(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
             "Rook", color, 7, indStrOtherPieces))
 
         # создание коней
