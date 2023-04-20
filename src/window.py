@@ -252,8 +252,15 @@ class Window():
         xCell, yCell = self.chess.chooseСell(xEvent, yEvent)
 
         if xCell == EMPTY:
+            # игрок тыкнул вне доски
             self.cancelChooseCell()
+        elif xCell == MOVE_DONE:
+            # игрок сделал ход
+            self.cancelChooseCell()
+            self.chess.drawChessBoard()
+            self.chess.drawChessPieces()
         else:
+            # нажали на фигуру ходящего игрока
             self.clearXYEntry()
             self.fillXYEntry(xCell, yCell)
 

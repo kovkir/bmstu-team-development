@@ -47,7 +47,7 @@ class ChessPiece:
         print("Попытка нахождение списка всех возможных ходов несуществующей фигуры")
 
 
-    def isNotEmpty(self, xNewСell: int, yNewСell: int):
+    def isMy(self, xNewСell: int, yNewСell: int):
         return self.xCell == xNewСell and \
                self.yCell == yNewСell
     
