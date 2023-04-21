@@ -6,6 +6,7 @@ from chessPieces.king import King
 from chessPieces.pawn import Pawn
 from chessPieces.rook import Rook
 from chessPieces.horse import Horse
+from chessPieces.elephant import Elephant
 from color import *
 
 
@@ -96,9 +97,9 @@ class Chess:
             "Horse", color, 6, indStrOtherPieces))
 
         # создание слонов
-        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+        chessPieces.append(Elephant(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
             "Elephant", color, 2, indStrOtherPieces))
-        chessPieces.append(ChessPiece(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
+        chessPieces.append(Elephant(self.canvas, self.sizeCell, self.xLeftChessBoard, self.yTopChessBoard, 
             "Elephant", color, 5, indStrOtherPieces))
 
         # создание ферзя
