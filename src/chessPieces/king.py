@@ -115,8 +115,9 @@ class King(ChessPiece):
         )
 
 
-    # нахождение списка всех возможных ходов короля без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+    # нахождение списка всех возможных ходов короля
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
 
         # добавление ходов вверх и вниз

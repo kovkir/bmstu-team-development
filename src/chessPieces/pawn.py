@@ -49,18 +49,45 @@ class Pawn(ChessPiece):
         )
 
     
-    # нахождение списка всех возможных ходов пешки без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+    # нахождение списка всех возможных ходов пешки
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
+
+        if activeWhitePlayer:
+            myChessBool = wChessBool
+            anotherChessBool = bChessBool
+        else:
+            myChessBool = bChessBool
+            anotherChessBool = wChessBool    
 
         step = -1 if mainWhiteСolor == activeWhitePlayer else 1
 
         # добавление ходов вперед
-        for i in range(-1, 2, 1):
-            self.movement.append([self.xCell + i, self.yCell + step])
+        x = self.xCell - 1
+        y = self.yCell + step
+        if x >= 0 and y >= 0 and y <= 7 and anotherChessBool[y][x]:
+            self.movement.append([x, y])
+
+        x = self.xCell + 1
+        y = self.yCell + step
+        if x <= 7 and y >= 0 and y <= 7 and anotherChessBool[y][x]:
+            self.movement.append([x, y])
+
+        x = self.xCell
+        y = self.yCell + step
+        if y >= 0 and y <= 7 and anotherChessBool[y][x] == False:
+            self.movement.append([x, y])
 
         # при первом ходе пешка может ходить на 2 клетки вперед
-        if self.firstTurn:
+        x = self.xCell
+        y = self.yCell + (step * 2)
+        if self.firstTurn \
+            and y >= 0 and y <= 7 \
+            and myChessBool[y - step][x] == False \
+            and anotherChessBool[y - step][x] == False \
+            and anotherChessBool[y][x] == False:
+
             self.movement.append([self.xCell, self.yCell + (step * 2)])
 
         return self.movement

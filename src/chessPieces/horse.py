@@ -66,8 +66,9 @@ class Horse(ChessPiece):
             fill = self.colorBorder, width = 2
         )
         
-    # нахождение списка всех возможных ходов коня без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+    # нахождение списка всех возможных ходов коня
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
 
         # добавление ходов вверх (i = -1) или вниз (i = 1)

@@ -37,6 +37,8 @@ class Chess:
     wChessPieces: list
     bChessPieces: list
     deletedPieces: dict()
+    wChessBool: list
+    bChessBool: list
 
 
     def __init__(self, canvas: Canvas, canvasWidth: int, canvasHeight: int, mainWhiteСolor: bool):
@@ -62,9 +64,38 @@ class Chess:
         self.wChessPieces = self.createChessPieces(WHITE_CHESS_PIECE)
         self.bChessPieces = self.createChessPieces(BLACK_CHESS_PIECE)
         self.deletedPieces = self.createDeletedPiecesDict()
+        self.wChessBool = self.createChessBool(WHITE_CHESS_PIECE)
+        self.bChessBool = self.createChessBool(BLACK_CHESS_PIECE)
         self.calculateMovement()
 
     
+    def createChessBool(self, color: str):
+        '''
+        Получение булевой матрицы размера доски, каждый элемент которой 
+        отвечает за присутствие фигуры в данной клетке 
+        '''
+        chessBool = []
+
+        if color == WHITE_CHESS_PIECE:
+            chessBool.append([False for _ in range(8)])
+            chessBool.append([False for _ in range(8)])
+        else:
+            chessBool.append([True for _ in range(8)])
+            chessBool.append([True for _ in range(8)])
+
+        for _ in range(4):
+            chessBool.append([False for _ in range(8)])
+
+        if color == WHITE_CHESS_PIECE:
+            chessBool.append([True for _ in range(8)])
+            chessBool.append([True for _ in range(8)])
+        else:
+            chessBool.append([False for _ in range(8)])
+            chessBool.append([False for _ in range(8)])
+
+        return chessBool
+    
+
     def createChessPieces(self, color: str):
         '''
         Получение списка шахматных фигур заданного цвета 
@@ -188,6 +219,8 @@ class Chess:
         for piece in self.bChessPieces:
             piece.yCell = 7 - piece.yCell
 
+        self.wChessBool.reverse()
+        self.bChessBool.reverse()
         self.calculateMovement()
     
 
@@ -216,15 +249,9 @@ class Chess:
         Проверка, что нажали на фигуру ходящего игрока
         '''
         if isColorWhite:
-            for piece in self.wChessPieces:
-                if piece.isMy(xСell, yСell):
-                    return True
+            return self.wChessBool[yСell][xСell]
         else:
-            for piece in self.bChessPieces:
-                if piece.isMy(xСell, yСell):
-                    return True
-        
-        return False
+            return self.wChessBool[yСell][xСell]
     
 
     def getCurСell(self):
@@ -289,8 +316,10 @@ class Chess:
         '''
         if isColorWhite:
             self.wChessPieces.remove(piece)
+            self.wChessBool[piece.yCell][piece.xCell] = False
         else:
             self.bChessPieces.remove(piece)
+            self.bChessBool[piece.yCell][piece.xCell] = False
         
     
     def eatPiece(self, eatenPiece: ChessPiece):
@@ -302,7 +331,21 @@ class Chess:
         self.deletePiece(eatenPiece, not self.activeWhitePlayer)
         
 
-    def movePiece(self, xNewСell: int, yNewСell: int):
+    def movePiece(self, currPiece: ChessPiece, xNewСell: int, yNewСell: int):
+        '''
+        Перемещение фигуры
+        '''
+        currPiece.setCell(xNewСell, yNewСell)
+
+        if self.activeWhitePlayer == True:
+            self.wChessBool[self.yCurСell][self.xCurСell] = False
+            self.wChessBool[yNewСell][xNewСell] = True
+        else:
+            self.bChessBool[self.yCurСell][self.xCurСell] = False
+            self.bChessBool[yNewСell][xNewСell] = True
+
+
+    def playerMakesMove(self, xNewСell: int, yNewСell: int):
         '''
         Игрок делает ход
         '''
@@ -321,7 +364,8 @@ class Chess:
                 self.eatPiece(eatenPiece)
 
             # перемещение фигуры
-            currPiece.setCell(xNewСell, yNewСell)
+            self.movePiece(currPiece, xNewСell, yNewСell)   
+            self.printChessBools() 
             # ход переходит к следующему игроку
             self.activeWhitePlayer = not self.activeWhitePlayer
         else:
@@ -349,7 +393,7 @@ class Chess:
 
             elif self.xCurСell != EMPTY and self.yCurСell != EMPTY:
                 # игрок делает ход
-                self.movePiece(xNewСell, yNewСell)
+                self.playerMakesMove(xNewСell, yNewСell)
 
                 self.xCurСell = MOVE_DONE
                 self.yCurСell = MOVE_DONE
@@ -371,10 +415,12 @@ class Chess:
         (без учета расположения других фигур)
         '''
         for piece in self.wChessPieces:
-            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer)
+            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer,
+                                    self.wChessBool, self.bChessBool)
 
         for piece in self.bChessPieces:
-            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer)
+            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer,
+                                    self.wChessBool, self.bChessBool)
 
 
     def isMyMove(self):
@@ -383,3 +429,27 @@ class Chess:
         внизу шахматной доски (ходить может только такой игрок)
         '''
         return self.mainWhiteСolor == self.activeWhitePlayer
+    
+
+    def printChessBools(self):
+        '''
+        Вывод булевых матриц расположения фигур на шахматной доске
+        '''
+        print("\n\n\x1B[34m--- White ChessBool ---\n") 
+        for row in self.wChessBool:
+            for elem in row:
+                if elem == True:
+                    print("\x1B[32m{:6s}".format(str(elem)), end='')
+                else:
+                    print("\x1B[31m{:6s}".format(str(elem)), end='')
+            print("\x1B[0m")
+        
+        print("\n\n\x1B[34m--- Black ChessBool ---\n") 
+        for row in self.bChessBool:
+            for elem in row:
+                if elem == True:
+                    print("\x1B[32m{:6s}".format(str(elem)), end='')
+                else:
+                    print("\x1B[31m{:6s}".format(str(elem)), end='')
+            print("\x1B[0m")
+        print()
