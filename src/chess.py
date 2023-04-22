@@ -249,15 +249,9 @@ class Chess:
         Проверка, что нажали на фигуру ходящего игрока
         '''
         if isColorWhite:
-            for piece in self.wChessPieces:
-                if piece.isMy(xСell, yСell):
-                    return True
+            return self.wChessBool[yСell][xСell]
         else:
-            for piece in self.bChessPieces:
-                if piece.isMy(xСell, yСell):
-                    return True
-        
-        return False
+            return self.wChessBool[yСell][xСell]
     
 
     def getCurСell(self):
@@ -438,6 +432,9 @@ class Chess:
     
 
     def printChessBools(self):
+        '''
+        Вывод булевых матриц расположения фигур на шахматной доске
+        '''
         print("\n\n\x1B[34m--- White ChessBool ---\n") 
         for row in self.wChessBool:
             for elem in row:
