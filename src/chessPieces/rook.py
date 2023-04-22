@@ -28,7 +28,7 @@ class Rook(ChessPiece):
 
     def drawPiece(self):
         self.drawRook(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                          self.yTopChessBoard  + self.yCell * self.sizeCell)
+                      self.yTopChessBoard  + self.yCell * self.sizeCell)
                           
 
     def drawRook(self, x, y):
@@ -82,3 +82,6 @@ class Rook(ChessPiece):
             # добавление ходов влево и направо
             if self.xCell != i:
                 self.movement.append([i, self.yCell])
+
+        return self.movement
+    

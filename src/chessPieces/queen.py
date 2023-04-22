@@ -28,7 +28,7 @@ class Queen(ChessPiece):
 
     def drawPiece(self):
         self.drawQueen(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                          self.yTopChessBoard  + self.yCell * self.sizeCell)
+                       self.yTopChessBoard  + self.yCell * self.sizeCell)
                           
 
     def drawQueen(self, x, y):
@@ -126,3 +126,6 @@ class Queen(ChessPiece):
             self.movement.append([x, y])
             x += 1
             y += 1
+
+        return self.movement
+    

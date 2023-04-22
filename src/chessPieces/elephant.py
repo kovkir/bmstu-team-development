@@ -102,3 +102,6 @@ class Elephant(ChessPiece):
             self.movement.append([x, y])
             x += 1
             y += 1
+
+        return self.movement
+    
