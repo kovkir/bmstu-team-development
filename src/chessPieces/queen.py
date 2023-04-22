@@ -78,5 +78,51 @@ class Queen(ChessPiece):
             outline = self.colorBorder, fill = self.color, width = 2
         )
 
+    # нахождение списка всех возможных ходов ферзя без учета расположения других фигур
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+        self.movement.clear()
 
-    
+        for i in range(8):
+            # добавление ходов вверх и вниз
+            if self.yCell != i:
+                self.movement.append([self.xCell, i])
+            
+            # добавление ходов влево и направо
+            if self.xCell != i:
+                self.movement.append([i, self.yCell])
+
+        # добавление ходов вверх налево по диагонали
+        x = self.xCell - 1
+        y = self.yCell - 1
+
+        while x >= 0 and y >= 0:
+            self.movement.append([x, y])
+            x -= 1
+            y -= 1
+
+        # добавление ходов вверх направо по диагонали
+        x = self.xCell + 1
+        y = self.yCell - 1
+
+        while x <= 7 and y >= 0:
+            self.movement.append([x, y])
+            x += 1
+            y -= 1
+
+        # добавление ходов вниз налево по диагонали
+        x = self.xCell - 1
+        y = self.yCell + 1
+
+        while x >= 0 and y <= 7:
+            self.movement.append([x, y])
+            x -= 1
+            y += 1
+
+        # добавление ходов вниз направо по диагонали
+        x = self.xCell + 1
+        y = self.yCell + 1
+
+        while x <= 7 and y <= 7:
+            self.movement.append([x, y])
+            x += 1
+            y += 1
