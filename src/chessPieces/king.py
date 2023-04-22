@@ -113,3 +113,18 @@ class King(ChessPiece):
             x + self.sizeCell * 0.8, y + self.sizeCell * 0.87,
             outline = self.colorBorder, fill = self.color, width = 2
         )
+
+
+    # нахождение списка всех возможных ходов короля без учета расположения других фигур
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+        self.movement.clear()
+
+        # добавление ходов вверх и вниз
+        for i in range(-1, 2, 1):
+            self.movement.append([self.xCell + i, self.yCell + 1])
+            self.movement.append([self.xCell + i, self.yCell - 1])
+
+        # добавление ходов влево и направо
+        self.movement.append([self.xCell + 1, self.yCell])
+        self.movement.append([self.xCell - 1, self.yCell])
+        
