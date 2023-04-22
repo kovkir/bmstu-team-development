@@ -251,8 +251,8 @@ class Chess:
         if isColorWhite:
             return self.wChessBool[yСell][xСell]
         else:
-            return self.wChessBool[yСell][xСell]
-    
+            return self.bChessBool[yСell][xСell]
+
 
     def getCurСell(self):
         '''
