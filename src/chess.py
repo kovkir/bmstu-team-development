@@ -61,6 +61,7 @@ class Chess:
         self.alphabet = ["A", "B", "C", "D", "E", "F", "G", "H"]
         self.wChessPieces = self.createChessPieces(WHITE_CHESS_PIECE)
         self.bChessPieces = self.createChessPieces(BLACK_CHESS_PIECE)
+        self.deletedPieces = self.createDeletedPiecesDict()
         self.calculateMovement()
 
     
@@ -111,6 +112,19 @@ class Chess:
             "King", color, 4, indStrOtherPieces))
         
         return chessPieces
+    
+    
+    def createDeletedPiecesDict(self):
+        '''
+        Создание словаря съеденных фигур
+        '''
+        keys = ["wPawn", "wHorse", "wElephant", "wRook", "wQueen",
+                "bPawn", "bHorse", "bElephant", "bRook", "bQueen"]
+
+        deletedPieces = dict()
+        deletedPieces = dict.fromkeys(keys, 0)
+
+        return deletedPieces
 
 
     def drawChessPieces(self):
@@ -268,6 +282,25 @@ class Chess:
             print("Не находится в списке ходов")
             return False
         
+    
+    def deletePiece(self, piece: ChessPiece, isColorWhite: bool):
+        '''
+        Удаление фигуры из списка белых\черных фигур
+        '''
+        if isColorWhite:
+            self.wChessPieces.remove(piece)
+        else:
+            self.bChessPieces.remove(piece)
+        
+    
+    def eatPiece(self, eatenPiece: ChessPiece):
+        '''
+        Обновление словаря удаленных фигур
+        '''
+        key = ("w" if self.activeWhitePlayer else "b") + eatenPiece.name
+        self.deletedPieces.update({key : self.deletedPieces[key] + 1}) 
+        self.deletePiece(eatenPiece, not self.activeWhitePlayer)
+        
 
     def movePiece(self, xNewСell: int, yNewСell: int):
         '''
@@ -278,7 +311,14 @@ class Chess:
 
         if self.checkMovement(currPiece, xNewСell, yNewСell):
             # если пытаемся съесть фигуру соперника
-            # if self.cellIsNotEmpty(xNewСell, yNewСell, not self.activeWhitePlayer):
+            if self.cellIsNotEmpty(xNewСell, yNewСell, not self.activeWhitePlayer):
+                eatenPiece = self.getPiece(xNewСell, yNewСell, not self.activeWhitePlayer)
+
+                if eatenPiece.name == "King":
+                    messagebox.showwarning("Ошибка", "Нельзя ходить на короля")
+                    return
+
+                self.eatPiece(eatenPiece)
 
             # перемещение фигуры
             currPiece.setCell(xNewСell, yNewСell)
