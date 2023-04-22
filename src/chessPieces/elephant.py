@@ -63,16 +63,33 @@ class Elephant(ChessPiece):
             outline = self.colorBorder, fill = self.color, width = 2
         )
         
-     # нахождение списка всех возможных ходов слона без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+     # нахождение списка всех возможных ходов слона
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
+
+        if activeWhitePlayer:
+            myChessBool = wChessBool
+            anotherChessBool = bChessBool
+        else:
+            myChessBool = bChessBool
+            anotherChessBool = wChessBool    
 
         # добавление ходов вверх налево по диагонали
         x = self.xCell - 1
         y = self.yCell - 1
 
         while x >= 0 and y >= 0:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x -= 1
             y -= 1
 
@@ -81,16 +98,34 @@ class Elephant(ChessPiece):
         y = self.yCell - 1
 
         while x <= 7 and y >= 0:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x += 1
             y -= 1
 
         # добавление ходов вниз налево по диагонали
         x = self.xCell - 1
         y = self.yCell + 1
-
+        
         while x >= 0 and y <= 7:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x -= 1
             y += 1
 
@@ -99,7 +134,16 @@ class Elephant(ChessPiece):
         y = self.yCell + 1
 
         while x <= 7 and y <= 7:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x += 1
             y += 1
 

@@ -49,8 +49,9 @@ class Pawn(ChessPiece):
         )
 
     
-    # нахождение списка всех возможных ходов пешки без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+    # нахождение списка всех возможных ходов пешки
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
 
         step = -1 if mainWhiteСolor == activeWhitePlayer else 1

@@ -70,8 +70,9 @@ class Rook(ChessPiece):
             outline = self.colorBorder, fill = self.color, width = 2
         )
 
-    # нахождение списка всех возможных ходов ладьи без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+    # нахождение списка всех возможных ходов ладьи
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
 
         for i in range(8):

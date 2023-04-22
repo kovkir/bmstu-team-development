@@ -78,8 +78,9 @@ class Queen(ChessPiece):
             outline = self.colorBorder, fill = self.color, width = 2
         )
 
-    # нахождение списка всех возможных ходов ферзя без учета расположения других фигур
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+    # нахождение списка всех возможных ходов ферзя
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+                          wChessBool: list, bChessBool: list):
         self.movement.clear()
 
         for i in range(8):
