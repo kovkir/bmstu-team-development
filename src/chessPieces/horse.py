@@ -65,3 +65,17 @@ class Horse(ChessPiece):
             x + self.sizeCell * 0.5,  y + self.sizeCell * 0.26,
             fill = self.colorBorder, width = 2
         )
+        
+    # нахождение списка всех возможных ходов коня без учета расположения других фигур
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+        self.movement.clear()
+
+        # добавление ходов вверх (i = -1) или вниз (i = 1)
+        for i in range(-1, 2, 2):
+            # вертикальная буква Г
+            self.movement.append([self.xCell + 1, self.yCell + 2 * i])
+            self.movement.append([self.xCell - 1, self.yCell + 2 * i])
+
+            # горизонтальная буква Г
+            self.movement.append([self.xCell + 2, self.yCell + i])
+            self.movement.append([self.xCell - 2, self.yCell + i])
