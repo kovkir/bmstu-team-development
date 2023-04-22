@@ -39,8 +39,8 @@ class Window():
         self.canvasHeight = canvasHeight
 
         self.createInterface(canvasWidth, True)
-        self.fillEntries()
         self.chess = Chess(self.canvas, canvasWidth, canvasHeight, True)
+        self.fillEntries()
 
 
     def createWindow(self, windowWidth: int, windowHeight: int):
@@ -223,6 +223,19 @@ class Window():
     def fillEntries(self):
         self.blockEntriesFigures(NORMAL)
         self.clearEntries()
+
+        self.wPawnEntry.insert(    0, self.chess.deletedPieces["wPawn"])
+        self.wHorseEntry.insert(   0, self.chess.deletedPieces["wHorse"])
+        self.wElephantEntry.insert(0, self.chess.deletedPieces["wElephant"])
+        self.wRookEntry.insert(    0, self.chess.deletedPieces["wRook"])
+        self.wQueenEntry.insert(   0, self.chess.deletedPieces["wQueen"])
+
+        self.bPawnEntry.insert(    0, self.chess.deletedPieces["bPawn"])
+        self.bHorseEntry.insert(   0, self.chess.deletedPieces["bHorse"])
+        self.bElephantEntry.insert(0, self.chess.deletedPieces["bElephant"])
+        self.bRookEntry.insert(    0, self.chess.deletedPieces["bRook"])
+        self.bQueenEntry.insert(   0, self.chess.deletedPieces["bQueen"])
+
         self.blockEntriesFigures(DISABLED)
 
     
@@ -259,6 +272,7 @@ class Window():
             self.cancelChooseCell()
             self.chess.drawChessBoard()
             self.chess.drawChessPieces()
+            self.fillEntries()
         else:
             # нажали на фигуру ходящего игрока
             self.clearXYEntry()
