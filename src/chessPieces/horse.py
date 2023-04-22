@@ -28,7 +28,7 @@ class Horse(ChessPiece):
 
     def drawPiece(self):
         self.drawHorse(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                          self.yTopChessBoard  + self.yCell * self.sizeCell)
+                       self.yTopChessBoard  + self.yCell * self.sizeCell)
                           
 
     def drawHorse(self, x, y):
@@ -79,3 +79,6 @@ class Horse(ChessPiece):
             # горизонтальная буква Г
             self.movement.append([self.xCell + 2, self.yCell + i])
             self.movement.append([self.xCell - 2, self.yCell + i])
+
+        return self.movement
+    

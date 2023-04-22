@@ -34,7 +34,7 @@ class King(ChessPiece):
 
     def drawPiece(self):
         self.drawKing(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                          self.yTopChessBoard  + self.yCell * self.sizeCell)
+                      self.yTopChessBoard  + self.yCell * self.sizeCell)
 
     
     def rotation(self, dots, angleRot, xCenter, yCenter):
@@ -127,4 +127,6 @@ class King(ChessPiece):
         # добавление ходов влево и направо
         self.movement.append([self.xCell + 1, self.yCell])
         self.movement.append([self.xCell - 1, self.yCell])
-        
+
+        return self.movement
+    

@@ -62,3 +62,6 @@ class Pawn(ChessPiece):
         # при первом ходе пешка может ходить на 2 клетки вперед
         if self.firstTurn:
             self.movement.append([self.xCell, self.yCell + (step * 2)])
+
+        return self.movement
+    
