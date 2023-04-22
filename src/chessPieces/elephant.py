@@ -62,3 +62,43 @@ class Elephant(ChessPiece):
             x + self.sizeCell * 0.8, y + self.sizeCell * 0.87,
             outline = self.colorBorder, fill = self.color, width = 2
         )
+        
+     # нахождение списка всех возможных ходов слона без учета расположения других фигур
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+        self.movement.clear()
+
+        # добавление ходов вверх налево по диагонали
+        x = self.xCell - 1
+        y = self.yCell - 1
+
+        while x >= 0 and y >= 0:
+            self.movement.append([x, y])
+            x -= 1
+            y -= 1
+
+        # добавление ходов вверх направо по диагонали
+        x = self.xCell + 1
+        y = self.yCell - 1
+
+        while x <= 7 and y >= 0:
+            self.movement.append([x, y])
+            x += 1
+            y -= 1
+
+        # добавление ходов вниз налево по диагонали
+        x = self.xCell - 1
+        y = self.yCell + 1
+
+        while x >= 0 and y <= 7:
+            self.movement.append([x, y])
+            x -= 1
+            y += 1
+
+        # добавление ходов вниз направо по диагонали
+        x = self.xCell + 1
+        y = self.yCell + 1
+
+        while x <= 7 and y <= 7:
+            self.movement.append([x, y])
+            x += 1
+            y += 1
