@@ -69,4 +69,16 @@ class Rook(ChessPiece):
             x + self.sizeCell * 0.8, y + self.sizeCell * 0.87,
             outline = self.colorBorder, fill = self.color, width = 2
         )
-                
+
+    # нахождение списка всех возможных ходов ладьи без учета расположения других фигур
+    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool):
+        self.movement.clear()
+
+        for i in range(8):
+            # добавление ходов вверх и вниз
+            if self.yCell != i:
+                self.movement.append([self.xCell, i])
+            
+            # добавление ходов влево и направо
+            if self.xCell != i:
+                self.movement.append([i, self.yCell])
