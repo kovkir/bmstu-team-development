@@ -325,7 +325,7 @@ class Chess:
             self.wChessBool[piece.yCell][piece.xCell] = False
         else:
             self.bChessPieces.remove(piece)
-            self.wChessBool[piece.yCell][piece.xCell] = False
+            self.bChessBool[piece.yCell][piece.xCell] = False
         
     
     def eatPiece(self, eatenPiece: ChessPiece):
@@ -370,7 +370,8 @@ class Chess:
                 self.eatPiece(eatenPiece)
 
             # перемещение фигуры
-            self.movePiece(currPiece, xNewСell, yNewСell)            
+            self.movePiece(currPiece, xNewСell, yNewСell)   
+            self.printChessBools() 
             # ход переходит к следующему игроку
             self.activeWhitePlayer = not self.activeWhitePlayer
         else:
@@ -434,3 +435,24 @@ class Chess:
         внизу шахматной доски (ходить может только такой игрок)
         '''
         return self.mainWhiteСolor == self.activeWhitePlayer
+    
+
+    def printChessBools(self):
+        print("\n\n\x1B[34m--- White ChessBool ---\n") 
+        for row in self.wChessBool:
+            for elem in row:
+                if elem == True:
+                    print("\x1B[32m{:6s}".format(str(elem)), end='')
+                else:
+                    print("\x1B[31m{:6s}".format(str(elem)), end='')
+            print("\x1B[0m")
+        
+        print("\n\n\x1B[34m--- Black ChessBool ---\n") 
+        for row in self.bChessBool:
+            for elem in row:
+                if elem == True:
+                    print("\x1B[32m{:6s}".format(str(elem)), end='')
+                else:
+                    print("\x1B[31m{:6s}".format(str(elem)), end='')
+            print("\x1B[0m")
+        print()

@@ -83,21 +83,96 @@ class Queen(ChessPiece):
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
-        for i in range(8):
-            # добавление ходов вверх и вниз
-            if self.yCell != i:
-                self.movement.append([self.xCell, i])
-            
-            # добавление ходов влево и направо
-            if self.xCell != i:
-                self.movement.append([i, self.yCell])
+        if activeWhitePlayer:
+            myChessBool = wChessBool
+            anotherChessBool = bChessBool
+        else:
+            myChessBool = bChessBool
+            anotherChessBool = wChessBool    
+
+        # добавление ходов вверх
+        x = self.xCell
+        y = self.yCell - 1
+
+        while y >= 0:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
+            self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
+            y -= 1
+
+        # добавление ходов направо
+        x = self.xCell + 1
+        y = self.yCell
+
+        while x <= 7:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
+            self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
+            x += 1
+
+        # добавление ходов вниз
+        x = self.xCell
+        y = self.yCell + 1
+        
+        while y <= 7:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
+            self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
+            y += 1
+
+        # добавление ходов налево
+        x = self.xCell - 1
+        y = self.yCell
+
+        while x >= 0:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
+            self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
+            x -= 1
 
         # добавление ходов вверх налево по диагонали
         x = self.xCell - 1
         y = self.yCell - 1
 
         while x >= 0 and y >= 0:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x -= 1
             y -= 1
 
@@ -106,16 +181,34 @@ class Queen(ChessPiece):
         y = self.yCell - 1
 
         while x <= 7 and y >= 0:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x += 1
             y -= 1
 
         # добавление ходов вниз налево по диагонали
         x = self.xCell - 1
         y = self.yCell + 1
-
+        
         while x >= 0 and y <= 7:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x -= 1
             y += 1
 
@@ -124,7 +217,16 @@ class Queen(ChessPiece):
         y = self.yCell + 1
 
         while x <= 7 and y <= 7:
+            # путь перегораживает своя фигура
+            if myChessBool[y][x]:
+                break
+
             self.movement.append([x, y])
+
+            # путь перегораживает фигура соперника
+            if anotherChessBool[y][x]:
+                break
+
             x += 1
             y += 1
 
