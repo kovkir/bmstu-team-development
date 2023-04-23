@@ -6,7 +6,5 @@ jobs:
     steps:
       - name: Get repository code
         uses: actions/checkout@v3
-      - name: Go to test folder
-        run: cd unitTests
       - name: Test application
-        run: python test.py
+        run: cd unitTests && python test.py
