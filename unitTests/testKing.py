@@ -11,12 +11,41 @@ class TestKing(unittest.TestCase):
         self.wKing = King(Canvas(), 100, 0, 100, "King", "white", 4, 7)
         self.bKing = King(Canvas(), 100, 0, 100, "King", "black", 4, 0)
 
+        self.wChessBool = [
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, False, True,  False, False, False],
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, True,  False, False, False, False],
+            [False, False, False, False, False, False, False, False],
+            [True,  True,  True,  False, True,  False, True,  True ],
+            [True,  True,  True,  True,  True,  True,  True,  True ],
+        ]
+        self.bChessBool = [
+            [True,  True,  True,  True,  True,  True,  True,  True ],
+            [True,  True,  True,  False, False, False, True,  True ],
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, True,  False, True,  False, False],
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, False, False, False, False, False],
+            [False, False, False, False, False, False, False, False],
+        ]
+
 
     def testWKingMovement(self):
-        movement = [[3, 8], [3, 6], [4, 8], [4, 6], [5, 8], [5, 6], [5, 7], [3, 7]]
-        self.assertEqual(self.wKing.calculateMovement(True, True), movement)
+        correctMovements = [[3, 6], [5, 6]]
+
+        self.assertEqual(
+            self.wKing.calculateMovement(True, True, self.wChessBool, self.bChessBool),
+            correctMovements
+        )
 
 
     def testBKingMovement(self):
-        movement = [[3, 1], [3, -1], [4, 1], [4, -1], [5, 1], [5, -1], [5, 0], [3, 0]]
-        self.assertEqual(self.bKing.calculateMovement(True, True), movement)
+        correctMovements = [[3, 1], [4, 1], [5, 1]]
+
+        self.assertEqual(
+            self.bKing.calculateMovement(True, False, self.wChessBool, self.bChessBool),
+            correctMovements
+        )
