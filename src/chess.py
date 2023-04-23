@@ -64,19 +64,19 @@ class Chess:
         self.wChessPieces = self.createChessPieces(WHITE_CHESS_PIECE)
         self.bChessPieces = self.createChessPieces(BLACK_CHESS_PIECE)
         self.deletedPieces = self.createDeletedPiecesDict()
-        self.wChessBool = self.createChessBool(WHITE_CHESS_PIECE)
-        self.bChessBool = self.createChessBool(BLACK_CHESS_PIECE)
+        self.wChessBool = self.createChessBool(mainWhiteСolor)
+        self.bChessBool = self.createChessBool(not mainWhiteСolor)
         self.calculateMovement()
 
     
-    def createChessBool(self, color: str):
+    def createChessBool(self, mainWhiteСolor: str):
         '''
         Получение булевой матрицы размера доски, каждый элемент которой 
         отвечает за присутствие фигуры в данной клетке 
         '''
         chessBool = []
 
-        if color == WHITE_CHESS_PIECE:
+        if mainWhiteСolor:
             chessBool.append([False for _ in range(8)])
             chessBool.append([False for _ in range(8)])
         else:
@@ -86,7 +86,7 @@ class Chess:
         for _ in range(4):
             chessBool.append([False for _ in range(8)])
 
-        if color == WHITE_CHESS_PIECE:
+        if mainWhiteСolor:
             chessBool.append([True for _ in range(8)])
             chessBool.append([True for _ in range(8)])
         else:
@@ -368,6 +368,7 @@ class Chess:
             self.printChessBools() 
             # ход переходит к следующему игроку
             self.activeWhitePlayer = not self.activeWhitePlayer
+            self.calculateMovement()
         else:
             messagebox.showinfo("Ошибка",
                 "Выбранная фигура не может ходить в эту клетку.")

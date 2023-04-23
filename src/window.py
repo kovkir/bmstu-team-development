@@ -1,6 +1,7 @@
 from tkinter import Tk, Canvas, Label, Entry, Button, Radiobutton, \
     messagebox, BooleanVar, DISABLED, NORMAL, END
 
+from p2p import MyOwnPeer2PeerNode
 from chess import Chess, EMPTY, MOVE_DONE
 from color import *
 
@@ -29,18 +30,23 @@ class Window():
     colorVar: BooleanVar
 
     chess: Chess
+    node: MyOwnPeer2PeerNode
 
 
     def __init__(self, windowWidth: int, windowHeight: int, 
-                       canvasWidth: int, canvasHeight: int):
+                       canvasWidth: int, canvasHeight: int, node: MyOwnPeer2PeerNode):
+        
         self.window = self.createWindow(windowWidth, windowHeight)
         self.canvas = self.createCanvas(canvasWidth, canvasHeight)
         self.canvasWidth = canvasWidth
         self.canvasHeight = canvasHeight
 
-        self.createInterface(canvasWidth, True)
-        self.chess = Chess(self.canvas, canvasWidth, canvasHeight, True)
+        self.createInterface(canvasWidth, node.mainWhiteСolor)
+        self.chess = Chess(self.canvas, canvasWidth, canvasHeight, node.mainWhiteСolor)
         self.fillEntries()
+
+        self.node = node
+        self.node.myInit(self)
 
 
     def createWindow(self, windowWidth: int, windowHeight: int):
@@ -290,11 +296,13 @@ class Window():
             y = event.y
 
             self.chooseCell(x, y)
+            self.node.sendXYEvent(x, self.canvasHeight - y)
 
 
     def cancelChooseCellEvent(self):
         if self.chess.isMyMove():
             self.cancelChooseCell()
+            self.node.sendXYEvent(0, 0)
 
 
     def changeСolorСhessPieces(self):
