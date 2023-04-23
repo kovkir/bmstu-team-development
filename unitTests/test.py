@@ -4,7 +4,7 @@ from testElephant import TestElephant
 from testHorse import TestHorse
 from testKing import TestKing
 from testPawn import TestPawn
-# from testQueen import TestQueen
+from testQueen import TestQueen
 # from testRook import TestRook
 
 
