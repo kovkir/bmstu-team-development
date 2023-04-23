@@ -71,15 +71,39 @@ class Horse(ChessPiece):
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
+        if activeWhitePlayer:
+            myChessBool = wChessBool
+        else:
+            myChessBool = bChessBool 
+            
         # добавление ходов вверх (i = -1) или вниз (i = 1)
         for i in range(-1, 2, 2):
-            # вертикальная буква Г
-            self.movement.append([self.xCell + 1, self.yCell + 2 * i])
-            self.movement.append([self.xCell - 1, self.yCell + 2 * i])
+            # вертикальная буква Г (повернута направо)
+            y = self.yCell + 2 * i
+            x = self.xCell + 1
 
-            # горизонтальная буква Г
-            self.movement.append([self.xCell + 2, self.yCell + i])
-            self.movement.append([self.xCell - 2, self.yCell + i])
+            if y >= 0 and y <= 7 and x <= 7 and myChessBool[y][x] == False:
+                self.movement.append([x, y])
+
+            # вертикальная буква Г (повернута налево)
+            y = self.yCell + 2 * i
+            x = self.xCell - 1
+
+            if y >= 0 and y <= 7 and x >= 0 and myChessBool[y][x] == False:
+                self.movement.append([x, y])
+
+            # горизонтальная буква Г (повернута направо)
+            y = self.yCell + i
+            x = self.xCell + 2
+
+            if y >= 0 and y <= 7 and x <= 7 and myChessBool[y][x] == False:
+                self.movement.append([x, y])
+
+            # горизонтальная буква Г (повернута налево)
+            y = self.yCell + i
+            x = self.xCell - 2
+
+            if y >= 0 and y <= 7 and x >= 0 and myChessBool[y][x] == False:
+                self.movement.append([x, y])
 
         return self.movement
-    
