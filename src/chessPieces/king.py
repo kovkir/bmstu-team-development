@@ -120,14 +120,40 @@ class King(ChessPiece):
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
+        if activeWhitePlayer:
+            myChessBool = wChessBool
+        else:
+            myChessBool = bChessBool 
+
         # добавление ходов вверх и вниз
         for i in range(-1, 2, 1):
-            self.movement.append([self.xCell + i, self.yCell + 1])
-            self.movement.append([self.xCell + i, self.yCell - 1])
+            # добавление ходов вверх
+            x = self.xCell + i
+            y = self.yCell + 1
 
-        # добавление ходов влево и направо
-        self.movement.append([self.xCell + 1, self.yCell])
-        self.movement.append([self.xCell - 1, self.yCell])
+            if x >= 0 and x <= 7 and y <= 7 and myChessBool[y][x] == False:
+                self.movement.append([x, y])
+            
+            # добавление ходов вниз
+            x = self.xCell + i
+            y = self.yCell - 1
+
+            if x >= 0 and x <= 7 and y >= 0 and myChessBool[y][x] == False:
+                self.movement.append([x, y])
+
+        # добавление ходов влево
+        x = self.xCell - 1
+        y = self.yCell
+
+        if x >= 0 and myChessBool[y][x] == False:
+            self.movement.append([x, y])
+
+        # добавление ходов направо
+        x = self.xCell + 1
+        y = self.yCell
+
+        if x <= 7 and myChessBool[y][x] == False:
+            self.movement.append([x, y])
 
         return self.movement
     
