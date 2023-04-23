@@ -1,0 +1,10 @@
+name: Test Chess App
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Go to test folder
+        run: cd unitTests
+      - name: Test application
+        run: python test.py
