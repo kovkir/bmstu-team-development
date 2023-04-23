@@ -4,6 +4,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
       - name: Go to test folder
         run: cd unitTests
       - name: Test application
