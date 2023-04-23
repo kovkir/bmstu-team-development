@@ -1,5 +1,9 @@
 import unittest
 
+import os
+os.system("Xvfb :1 -screen 0 720x720x16 &")
+os.environ['DISPLAY'] = ":1.0"
+
 from testElephant import TestElephant
 from testHorse import TestHorse
 from testKing import TestKing
