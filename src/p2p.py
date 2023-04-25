@@ -1,36 +1,66 @@
-from p2pnetwork.node import Node
 import time
+import subprocess
+from p2pnetwork.node import Node
+
+from constants import *
 
 
-HOST = 'localhost'
-PORT_FOR_WHITE = 8000
-PORT_FOR_BLACK = 9000
+def getHost(defaultHost: bool):
+    if defaultHost:
+        host = HOST_DEFAULT
+    else:
+        cmd = open('../getIPcmd.txt', 'r').read()
+        host = subprocess.getoutput(cmd)
+
+    print("Ваш IP: {}\n".format(host))
+    return host
 
 
-def p2pNode(whiteСolor: bool):
+def getPort(whiteСolor: bool):
     if whiteСolor:
         port = PORT_FOR_WHITE
     else:
         port = PORT_FOR_BLACK
 
+    return port
+
+
+def p2pNode(whiteСolor: bool, defaultHost: bool, reconnecting=False):
+    host = getHost(defaultHost)
+    port = getPort(whiteСolor)
+
     try:
-        node = MyOwnPeer2PeerNode(HOST, port, mainWhiteСolor=whiteСolor)
+        node = MyOwnPeer2PeerNode(host, port, mainWhiteСolor=whiteСolor)
     except:
-        print("\n{} цвет уже занят, вам придется играть за {} :)\n".format(
-            "Белый"  if whiteСolor else "Черный",
-            "Черных" if whiteСolor else "Белых"
-        ))
-        node = p2pNode(not whiteСolor)
+        if reconnecting == False:
+            print("\nОшибка!\nПохоже {} цвет уже занят, вам придется играть за {} :)".format(
+                "белый"  if whiteСolor else "черный",
+                "черных" if whiteСolor else "белых"
+            ))
+            node = p2pNode(not whiteСolor, defaultHost, reconnecting=True)
+        else:
+            print("\nПовторная ошибка! :(\n")
+            return None
 
     return node
 
 
-def p2pConnection(node: Node):
-    print("Ожидание соперника...")
+def p2pConnection(node: Node, defaultHost: bool):
+    print("Ожидание соперника...\n")
+    status = True
+
     if node.mainWhiteСolor:
-        while node.connect_with_node(HOST, PORT_FOR_BLACK) == False:
-            time.sleep(1)
-    
+        if defaultHost:
+            while node.connect_with_node(HOST_DEFAULT, PORT_FOR_BLACK) == False:
+                time.sleep(1)
+        else:
+            host = input("Введите IP вашего соперника: ")
+            status = node.connect_with_node(host, PORT_FOR_BLACK)
+            if status == False:
+                print("Ошибка подключения!\n")
+
+    return status
+
 
 class MyOwnPeer2PeerNode (Node):
     mainWhiteСolor: bool
@@ -44,9 +74,9 @@ class MyOwnPeer2PeerNode (Node):
         self.mainWhiteСolor = mainWhiteСolor
 
         if mainWhiteСolor:
-            self.namePlayer = "First Player"
+            self.namePlayer = "White Player"
         else:
-            self.namePlayer = "Second Player"
+            self.namePlayer = "Black Player"
 
 
     def node_message(self, connected_node, data):
