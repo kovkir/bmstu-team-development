@@ -293,14 +293,15 @@ class Chess:
 
     def checkMovement(self, currPiece: ChessPiece, xNewCell: int, yNewCell: int):
         '''
-        Проверяем xNewCell, yNewCell на присутствие в списке 
-        возможных ходов. Далее для каждой фигуры вызывается соответствующая 
-        ей функция, которая делает уникальные проверки
+        Проверяем xNewCell, yNewCell на присутствие в списке возможных ходов.
         '''
         if currPiece.name == "Pawn":
             currPiece.firstTurn = False
 
-        print(currPiece.name, currPiece.movement, "\n")
+        print("\nСписок возможных ходов для {:s}{:s}{:s}: {}"
+            .format(PURPLE_TERMINAL, currPiece.name, BASE_COLOR_TERMINAL, currPiece.movement))
+        print("Игрок походил: {:s}{}{:s}"
+            .format(PURPLE_TERMINAL, [xNewCell, yNewCell], BASE_COLOR_TERMINAL))
 
         if [xNewCell, yNewCell] in currPiece.movement:
             print("Находится в списке ходов")
@@ -370,8 +371,9 @@ class Chess:
             self.activeWhitePlayer = not self.activeWhitePlayer
             self.calculateMovement()
         else:
-            messagebox.showinfo("Ошибка",
-                "Выбранная фигура не может ходить в эту клетку.")
+            if self.activeWhitePlayer == self.mainWhiteСolor:
+                messagebox.showinfo("Ошибка",
+                    "Выбранная фигура не может ходить в эту клетку.")
             
 
     def chooseСell(self, xEvent: int, yEvent: int):
@@ -436,21 +438,21 @@ class Chess:
         '''
         Вывод булевых матриц расположения фигур на шахматной доске
         '''
-        print("\n\n\x1B[34m--- White ChessBool ---\n") 
+        print("\n{:s}--- White ChessBool ---\n".format(BLUE_TERMINAL)) 
         for row in self.wChessBool:
             for elem in row:
                 if elem == True:
-                    print("\x1B[32m{:6s}".format(str(elem)), end='')
+                    print("{:s}{:6s}".format(GREEN_TERMINAL, str(elem)), end='')
                 else:
-                    print("\x1B[31m{:6s}".format(str(elem)), end='')
-            print("\x1B[0m")
+                    print("{:s}{:6s}".format(RED_TERMINAL, str(elem)), end='')
+            print("{:s}".format(BASE_COLOR_TERMINAL))
         
-        print("\n\n\x1B[34m--- Black ChessBool ---\n") 
+        print("\n{:s}--- Black ChessBool ---\n".format(BLUE_TERMINAL)) 
         for row in self.bChessBool:
             for elem in row:
                 if elem == True:
-                    print("\x1B[32m{:6s}".format(str(elem)), end='')
+                    print("{:s}{:6s}".format(GREEN_TERMINAL, str(elem)), end='')
                 else:
-                    print("\x1B[31m{:6s}".format(str(elem)), end='')
-            print("\x1B[0m")
+                    print("{:s}{:6s}".format(RED_TERMINAL, str(elem)), end='')
+            print("{:s}".format(BASE_COLOR_TERMINAL))
         print()

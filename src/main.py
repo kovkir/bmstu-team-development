@@ -1,10 +1,13 @@
 from p2p import p2pNode, p2pConnection
 from window import Window
 from constants import *
+from color import *
 
 
 def getDefaultHost():
-    strDefaultHost = input("\nИграть на разных устройствах в локальной сети? (y or N): ")
+    strDefaultHost = input(
+        "\nИграть на разных устройствах в локальной сети? ({:s}y{:s} or {:s}N{:s}): "
+            .format(PURPLE_TERMINAL, BASE_COLOR_TERMINAL, PURPLE_TERMINAL, BASE_COLOR_TERMINAL))
 
     if strDefaultHost == "y":
         defaultHost = False
@@ -15,14 +18,17 @@ def getDefaultHost():
 
 
 def getP2PNode(defaultHost: bool):
-    colorUser = input("Выберете цвет (w or b): ")
+    colorUser = input(
+        "Выберете цвет ({:s}w{:s} or {:s}b{:s}): "
+            .format(PURPLE_TERMINAL, BASE_COLOR_TERMINAL, PURPLE_TERMINAL, BASE_COLOR_TERMINAL))
 
     if colorUser == "w":
         node = p2pNode(whiteСolor=True, defaultHost=defaultHost)
     elif colorUser == "b":
         node = p2pNode(whiteСolor=False, defaultHost=defaultHost)
     else:
-        print("\nОшибка! Ожидался ввод 'w' или 'b'.\n")
+        print("\n{:s}Ошибка!{:s} Ожидался ввод 'w' или 'b'.\n"
+            .format(RED_TERMINAL, BASE_COLOR_TERMINAL))
         node = None
 
     return node

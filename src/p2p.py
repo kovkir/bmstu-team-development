@@ -3,6 +3,7 @@ import subprocess
 from p2pnetwork.node import Node
 
 from constants import *
+from color import *
 
 
 def getHost(defaultHost: bool):
@@ -12,7 +13,9 @@ def getHost(defaultHost: bool):
         cmd = open('../getIPcmd.txt', 'r').read()
         host = subprocess.getoutput(cmd)
 
-    print("Ваш IP: {}\n".format(host))
+    print("{:s}Ваш IP: {:s}{}\n"
+        .format(YELLOW_TERMINAL, BASE_COLOR_TERMINAL, host))
+    
     return host
 
 
@@ -33,31 +36,38 @@ def p2pNode(whiteСolor: bool, defaultHost: bool, reconnecting=False):
         node = MyOwnPeer2PeerNode(host, port, mainWhiteСolor=whiteСolor)
     except:
         if reconnecting == False:
-            print("\nОшибка!\nПохоже {} цвет уже занят, вам придется играть за {} :)".format(
-                "белый"  if whiteСolor else "черный",
-                "черных" if whiteСolor else "белых"
-            ))
+            print("\n{:s}Ошибка!{:s}\nПохоже {} цвет уже занят, вам придется играть за {} :)"
+                .format(
+                    PURPLE_TERMINAL, BASE_COLOR_TERMINAL,
+                    "белый"  if whiteСolor else "черный",
+                    "черных" if whiteСolor else "белых"
+                ))
             node = p2pNode(not whiteСolor, defaultHost, reconnecting=True)
         else:
-            print("\nПовторная ошибка! :(\n")
+            print("\n{:s}Повторная ошибка!{:s} :(\n"
+                .format(RED_TERMINAL, BASE_COLOR_TERMINAL))
             return None
 
     return node
 
 
 def p2pConnection(node: Node, defaultHost: bool):
-    print("Ожидание соперника...\n")
     status = True
+    print("{:s}Ожидание соперника...{:s}\n"
+        .format(YELLOW_TERMINAL, BASE_COLOR_TERMINAL))
 
     if node.mainWhiteСolor:
         if defaultHost:
             while node.connect_with_node(HOST_DEFAULT, PORT_FOR_BLACK) == False:
                 time.sleep(1)
         else:
-            host = input("Введите IP вашего соперника: ")
+            host = input("Введите {:s}IP вашего соперника{:s}: "
+                    .format(YELLOW_TERMINAL, BASE_COLOR_TERMINAL))
+            
             status = node.connect_with_node(host, PORT_FOR_BLACK)
             if status == False:
-                print("Ошибка подключения!\n")
+                print("{:s}Ошибка подключения!{:s}\n"
+                    .format(RED_TERMINAL, BASE_COLOR_TERMINAL))
 
     return status
 
@@ -80,7 +90,8 @@ class MyOwnPeer2PeerNode (Node):
 
 
     def node_message(self, connected_node, data):
-        print("node_message from " + self.namePlayer)
+        print("{:s}node_message from {:s}{:s}"
+            .format(YELLOW_TERMINAL, BASE_COLOR_TERMINAL, self.namePlayer))
         print("x = {}, y = {}".format(data['xEvent'], data['yEvent']))
 
         self.window.chooseCell(data['xEvent'], data['yEvent'])
