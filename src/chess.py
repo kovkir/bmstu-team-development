@@ -345,6 +345,17 @@ class Chess:
             self.bChessBool[self.yCurСell][self.xCurСell] = False
             self.bChessBool[yNewСell][xNewСell] = True
 
+    
+    def findKing(self, isColorWhite: bool):
+        if isColorWhite:
+            for piece in self.wChessPieces:
+                if piece.name == "King":
+                    return piece
+        else:
+            for piece in self.bChessPieces:
+                if piece.name == "King":
+                    return piece
+
 
     def playerMakesMove(self, xNewСell: int, yNewСell: int):
         '''
@@ -366,10 +377,22 @@ class Chess:
 
             # перемещение фигуры
             self.movePiece(currPiece, xNewСell, yNewСell)   
-            self.printChessBools() 
+            self.printChessBools()
+
+                
             # ход переходит к следующему игроку
             self.activeWhitePlayer = not self.activeWhitePlayer
             self.calculateMovement()
+
+            king = self.findKing(not self.activeWhitePlayer)
+            check, checkmate = king.checkCheckmate(not self.activeWhitePlayer, self.wChessPieces, self.bChessPieces)
+            if check == True:
+                messagebox.showinfo("Ошибка",
+                    "Шах.")
+            if checkmate == True:
+                messagebox.showinfo("Ошибка",
+                    "Шах и мат.")
+
         else:
             if self.activeWhitePlayer == self.mainWhiteСolor:
                 messagebox.showinfo("Ошибка",
