@@ -67,11 +67,11 @@ class Horse(ChessPiece):
         )
         
     # нахождение списка всех возможных ходов коня
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+    def calculateMovement(self, mainWhiteСolor: bool, isColorWhite: bool,
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
-        if activeWhitePlayer:
+        if isColorWhite:
             myChessBool = wChessBool
         else:
             myChessBool = bChessBool 

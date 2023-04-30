@@ -8,10 +8,7 @@ from chessPieces.rook import Rook
 from chessPieces.horse import Horse
 from chessPieces.elephant import Elephant
 from color import *
-
-
-EMPTY     = -1
-MOVE_DONE = -2
+from constants import *
 
 
 class Chess:
@@ -40,6 +37,9 @@ class Chess:
     wChessBool: list
     bChessBool: list
 
+    check: bool
+    checkmate: bool
+
 
     def __init__(self, canvas: Canvas, canvasWidth: int, canvasHeight: int, mainWhiteСolor: bool):
         self.canvas = canvas
@@ -59,6 +59,9 @@ class Chess:
 
         self.xCurСell = EMPTY
         self.yCurСell = EMPTY
+
+        self.check     = False
+        self.checkmate = False
 
         self.alphabet = ["A", "B", "C", "D", "E", "F", "G", "H"]
         self.wChessPieces = self.createChessPieces(WHITE_CHESS_PIECE)
@@ -258,22 +261,9 @@ class Chess:
         '''
         Нахождение координат для вывода в окне "Выбранная фигура"
         '''
-        if self.xCurСell >= 0 and \
-           self.yCurСell >= 0:
-            # нажали на фигуру ходящего игрока
-            xCell = self.alphabet[self.xCurСell]
-            yCell = str(8 - self.yCurСell)
+        xCell = self.alphabet[self.xCurСell]
+        yCell = str(8 - self.yCurСell)
             
-        elif self.xCurСell == EMPTY or \
-             self.yCurСell == EMPTY:
-            # игрок тыкнул вне доски
-            xCell = EMPTY
-            yCell = EMPTY
-        else:
-            # игрок сделал ход
-            xCell = MOVE_DONE
-            yCell = MOVE_DONE
-
         return xCell, yCell
     
 
@@ -295,16 +285,28 @@ class Chess:
         '''
         Проверяем xNewCell, yNewCell на присутствие в списке возможных ходов.
         '''
-        if currPiece.name == "Pawn":
-            currPiece.firstTurn = False
-
         print("\nСписок возможных ходов для {:s}{:s}{:s}: {}"
             .format(PURPLE_TERMINAL, currPiece.name, BASE_COLOR_TERMINAL, currPiece.movement))
         print("Игрок походил: {:s}{}{:s}"
             .format(PURPLE_TERMINAL, [xNewCell, yNewCell], BASE_COLOR_TERMINAL))
 
+        if self.checkmate:
+            print("Игра окончена, вы не можите больше ходить")
+            return False
+            
         if [xNewCell, yNewCell] in currPiece.movement:
             print("Находится в списке ходов")
+
+            if self.check and currPiece.name != "King":
+                print("Недоступный ход, вам был поставлен шах")
+                return False
+            else:
+                self.check = False
+
+            if currPiece.name == "Pawn":
+                print("Пешка больше не может ходить на 2 клетки")
+                currPiece.firstTurn = False
+
             return True
         else:
             print("Не находится в списке ходов")
@@ -345,6 +347,30 @@ class Chess:
             self.bChessBool[self.yCurСell][self.xCurСell] = False
             self.bChessBool[yNewСell][xNewСell] = True
 
+    
+    def findKing(self, isColorWhite: bool):
+        '''
+        Поиск короля нужного цвета
+        '''
+        if isColorWhite:
+            for piece in self.wChessPieces:
+                if piece.name == "King":
+                    return piece
+        else:
+            for piece in self.bChessPieces:
+                if piece.name == "King":
+                    return piece
+    
+
+    def checkmateCheck(self, isColorWhite: bool):
+        '''
+        Проверка, что игроку поставили шах или мат
+        '''
+        king = self.findKing(isColorWhite)      
+        check, checkmate = king.checkCheckmate(isColorWhite, self.wChessPieces, self.bChessPieces)
+
+        return check, checkmate
+
 
     def playerMakesMove(self, xNewСell: int, yNewСell: int):
         '''
@@ -357,23 +383,23 @@ class Chess:
             # если пытаемся съесть фигуру соперника
             if self.cellIsNotEmpty(xNewСell, yNewСell, not self.activeWhitePlayer):
                 eatenPiece = self.getPiece(xNewСell, yNewСell, not self.activeWhitePlayer)
-
-                if eatenPiece.name == "King":
-                    messagebox.showwarning("Ошибка", "Нельзя ходить на короля")
-                    return
-
                 self.eatPiece(eatenPiece)
 
             # перемещение фигуры
             self.movePiece(currPiece, xNewСell, yNewСell)   
-            self.printChessBools() 
+            self.printChessBools()
             # ход переходит к следующему игроку
             self.activeWhitePlayer = not self.activeWhitePlayer
             self.calculateMovement()
+            # проверка, что игрок поставил шах или мат
+            self.check, self.checkmate = self.checkmateCheck(self.activeWhitePlayer)
         else:
             if self.activeWhitePlayer == self.mainWhiteСolor:
                 messagebox.showinfo("Ошибка",
                     "Выбранная фигура не может ходить в эту клетку.")
+            return False
+        
+        return True
             
 
     def chooseСell(self, xEvent: int, yEvent: int):
@@ -396,12 +422,29 @@ class Chess:
 
             elif self.xCurСell != EMPTY and self.yCurСell != EMPTY:
                 # игрок делает ход
-                self.playerMakesMove(xNewСell, yNewСell)
+                successfulMove = self.playerMakesMove(xNewСell, yNewСell)
 
-                self.xCurСell = MOVE_DONE
-                self.yCurСell = MOVE_DONE
+                # не удалось походить
+                if successfulMove == False:
+                    self.xCurСell = EMPTY
+                    self.yCurСell = EMPTY
+                # игрок поставил мат
+                elif self.checkmate:
+                    self.xCurСell = CHECKMATE
+                    self.yCurСell = CHECKMATE
+                # игрок поставил шах
+                elif self.check:
+                    self.xCurСell = CHECK
+                    self.yCurСell = CHECK
+                # обычный успешных ход
+                else:
+                    self.xCurСell = MOVE_DONE
+                    self.yCurСell = MOVE_DONE
 
-        return self.getCurСell()
+        if self.xCurСell >= 0 and self.yCurСell >= 0:
+            return self.getCurСell()
+        else: 
+            return [self.xCurСell, self.yCurСell]
 
 
     def cancelChooseCell(self):
@@ -418,11 +461,11 @@ class Chess:
         (без учета расположения других фигур)
         '''
         for piece in self.wChessPieces:
-            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer,
+            piece.calculateMovement(self.mainWhiteСolor, True,
                                     self.wChessBool, self.bChessBool)
 
         for piece in self.bChessPieces:
-            piece.calculateMovement(self.mainWhiteСolor, self.activeWhitePlayer,
+            piece.calculateMovement(self.mainWhiteСolor, False,
                                     self.wChessBool, self.bChessBool)
 
 

@@ -116,11 +116,11 @@ class King(ChessPiece):
 
 
     # нахождение списка всех возможных ходов короля
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+    def calculateMovement(self, mainWhiteСolor: bool, isColorWhite: bool,
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
-        if activeWhitePlayer:
+        if isColorWhite:
             myChessBool = wChessBool
         else:
             myChessBool = bChessBool 
@@ -157,3 +157,46 @@ class King(ChessPiece):
 
         return self.movement
     
+
+    def checkCheckmate(self, isColorWhite: bool, wChessPieces: list, bChessPieces: list): 
+        # enemyPieces -- массив вражеских фигур
+        if isColorWhite:
+            enemyPieces = bChessPieces
+        else:
+            enemyPieces = wChessPieces
+
+        check     = False # шах
+        checkmate = False # мат
+
+        '''
+        --- Идея ---
+        1) Если клетка с королем находится в каком-либо из массивов 
+           возможных ходов фигур соперника, то это шах.
+        2) Удаление возможных ходов короля, в которых ему будет поставлен шах.
+        3) Если был поставлен шах и список возможных ходов короля пуст, 
+           то был поставлен мат.
+        '''
+
+        # 1 пункт
+        for enemyPiece in enemyPieces:
+            for move in enemyPiece.movement:
+                # если позиция короля совпала с каким-либо из ходов, то ставится флаг шаха
+                if self.xCell == move[0] and self.yCell == move[1]:
+                    check = True
+                    break
+            if check:
+                break
+
+        # 2 пункт
+        for kingMove in self.movement:
+            for enemyPiece in enemyPieces:
+                # если возможный ход короля попадает на какую-либо из клеток хода вражеской фигуры, то этот ход удаляется у короля, поскольку там также будет шах
+                if kingMove in enemyPiece.movement:
+                    self.movement.remove(kingMove)
+                    break
+
+        # 3 пункт
+        if check and len(self.movement) == 0:
+            checkmate = True
+
+        return check, checkmate

@@ -9,3 +9,9 @@ CANVAS_HEIGHT = WINDOW_HEIGHT
 HOST_DEFAULT   = 'localhost'
 PORT_FOR_WHITE = 6700
 PORT_FOR_BLACK = 6800
+
+# Для шахматной доски
+EMPTY     = -1
+MOVE_DONE = -2
+CHECK     = -3
+CHECKMATE = -4
