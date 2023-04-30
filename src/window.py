@@ -2,7 +2,8 @@ from tkinter import Tk, Canvas, Label, Entry, Button, Radiobutton, \
     messagebox, BooleanVar, DISABLED, NORMAL, END
 
 from p2p import MyOwnPeer2PeerNode
-from chess import Chess, EMPTY, MOVE_DONE
+from chess import Chess
+from constants import *
 from color import *
 
 
@@ -267,18 +268,34 @@ class Window():
         self.yEntry.config(state = DISABLED)
 
 
+    def updateWindow(self):
+        self.cancelChooseCell()
+        self.chess.drawChessBoard()
+        self.chess.drawChessPieces()
+        self.fillEntries()
+        
+
     def chooseCell(self, xEvent, yEvent):
         xCell, yCell = self.chess.chooseСell(xEvent, yEvent)
 
+        # игрок тыкнул вне доски
         if xCell == EMPTY:
-            # игрок тыкнул вне доски
             self.cancelChooseCell()
+        # игрок сделал ход
         elif xCell == MOVE_DONE:
-            # игрок сделал ход
-            self.cancelChooseCell()
-            self.chess.drawChessBoard()
-            self.chess.drawChessPieces()
-            self.fillEntries()
+            self.updateWindow()
+        # игрок поставил шах
+        elif xCell == CHECK:
+            self.updateWindow() 
+            messagebox.showinfo("Ошибка", "Шах!")
+        # игрок поставил шах и мат
+        elif xCell == CHECKMATE:
+            self.updateWindow() 
+            messagebox.showinfo("Ошибка",
+                "Шах и мат! Игра окончена, победили {:s}!".format(
+                "Белые" if not self.chess.activeWhitePlayer else "Черные"))
+            # закрытие окна
+            # self.window.destroy()
         else:
             # нажали на фигуру ходящего игрока
             self.clearXYEntry()
@@ -295,9 +312,9 @@ class Window():
             x = event.x
             y = event.y
 
-            self.chooseCell(x, y)
             self.node.sendXYEvent(x, self.canvasHeight - y)
-
+            self.chooseCell(x, y)
+            
 
     def cancelChooseCellEvent(self):
         if self.chess.isMyMove():

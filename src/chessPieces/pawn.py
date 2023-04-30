@@ -50,18 +50,18 @@ class Pawn(ChessPiece):
 
     
     # нахождение списка всех возможных ходов пешки
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+    def calculateMovement(self, mainWhiteСolor: bool, isColorWhite: bool,
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
-        if activeWhitePlayer:
+        if isColorWhite:
             myChessBool = wChessBool
             anotherChessBool = bChessBool
         else:
             myChessBool = bChessBool
             anotherChessBool = wChessBool    
 
-        step = -1 if mainWhiteСolor == activeWhitePlayer else 1
+        step = -1 if mainWhiteСolor == isColorWhite else 1
 
         # добавление ходов вперед
         x = self.xCell - 1

@@ -43,7 +43,7 @@ class ChessPiece:
         )
 
 
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+    def calculateMovement(self, mainWhiteСolor: bool, isColorWhite: bool,
                           wChessBool: list, bChessBool: list):
         print("Попытка нахождение списка всех возможных ходов несуществующей фигуры")
 

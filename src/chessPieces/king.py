@@ -116,11 +116,11 @@ class King(ChessPiece):
 
 
     # нахождение списка всех возможных ходов короля
-    def calculateMovement(self, mainWhiteСolor: bool, activeWhitePlayer: bool,
+    def calculateMovement(self, mainWhiteСolor: bool, isColorWhite: bool,
                           wChessBool: list, bChessBool: list):
         self.movement.clear()
 
-        if activeWhitePlayer:
+        if isColorWhite:
             myChessBool = wChessBool
         else:
             myChessBool = bChessBool 
@@ -158,60 +158,45 @@ class King(ChessPiece):
         return self.movement
     
 
-    def checkCheckmate(self, activeWhitePlayer: bool, wChessPieces: list, bChessPieces: list): 
-        #wChessBool: list, bChessBool: list):
+    def checkCheckmate(self, isColorWhite: bool, wChessPieces: list, bChessPieces: list): 
         # enemyPieces -- массив вражеских фигур
-        if activeWhitePlayer:
-            #myChessBool = wChessBool
+        if isColorWhite:
             enemyPieces = bChessPieces
         else:
-            #myChessBool = bChessBool
             enemyPieces = wChessPieces
 
-        check = False
-        checkmate = False
+        check     = False # шах
+        checkmate = False # мат
 
+        '''
+        --- Идея ---
+        1) Если клетка с королем находится в каком-либо из массивов 
+           возможных ходов фигур соперника, то это шах.
+        2) Удаление возможных ходов короля, в которых ему будет поставлен шах.
+        3) Если был поставлен шах и список возможных ходов короля пуст, 
+           то был поставлен мат.
+        '''
 
-        # Идея -- 
-        # 1) проверить ходы каждой фигуры соперника на наличие клетки с королем 
-        # 2) если клетка с королем находится в каком-либо из массивов ходов фигур соперника, то это шах -> переход к пункту 3, иначе игра продолжается как обычно
-        # 3) проверить каждую клетку из возможных ходов короля как в пункте 1, если в каждой клетке стоит шах, то это мат, иначе надо обрезать массив доступных ходов короля до значений, в которых не получается шах -> игрок обязан походить в одну из доступных клеток
-
-        # реализация 1 пункта
-        for enemyChessPiece in enemyPieces:
-            for move in enemyChessPiece.movement:
+        # 1 пункт
+        for enemyPiece in enemyPieces:
+            for move in enemyPiece.movement:
+                # если позиция короля совпала с каким-либо из ходов, то ставится флаг шаха
                 if self.xCell == move[0] and self.yCell == move[1]:
-                    # если позиция короля совпала с каким-либо из ходов, то ставится флаг шаха
                     check = True
                     break
+            if check:
+                break
 
+        # 2 пункт
+        for kingMove in self.movement:
+            for enemyPiece in enemyPieces:
+                # если возможный ход короля попадает на какую-либо из клеток хода вражеской фигуры, то этот ход удаляется у короля, поскольку там также будет шах
+                if kingMove in enemyPiece.movement:
+                    self.movement.remove(kingMove)
+                    break
 
-        # если был поставлен шах, то надо проверить возможность мата
-        if check == True:
-            # реализация 3 пункта
-            for kingMove in self.movement:
-                futureCheck = False
-                for enemyChessPiece in enemyPieces:
-                    print("King moves", self.movement)
-                    print("Enemy piece moves", enemyChessPiece.movement)
-                    for move in enemyChessPiece.movement:
-                        # если возможный ход короля также попадает на какую-либо из клеток хода вражеской фигуры, то этот ход удаляется у Короля, поскольку если он туда пойдет, то там также будет шах, а следовательно, мат
-                        if kingMove == move:
-                            futureCheck = True
-                            print("King move", kingMove)
-                            self.movement.remove(kingMove)
-                            break
-                    if futureCheck == True:
-                        break
-
-            # если список ходов короля пустой, то ему поставили мат
-            if len(self.movement) == 0:
-                checkmate = True
-
-        # по итогу циклов выше, будет либо определен мат, либо у Короля останутся только те ходы, где ему повторно сразу не поставят шах
+        # 3 пункт
+        if check and len(self.movement) == 0:
+            checkmate = True
 
         return check, checkmate
-
-
-        
-    
