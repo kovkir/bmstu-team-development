@@ -1,5 +1,4 @@
-from tkinter import Canvas, CENTER
-from color import *
+from tkinter import Canvas
 
 from chessPieces.chessPiece import ChessPiece
 
@@ -18,18 +17,16 @@ class Rook(ChessPiece):
 
     movement: list
 
-
-    def __init__(self, canvas: Canvas, sizeCell: int, xLeftChessBoard: int, yTopChessBoard: int,
+    def __init__(self, canvas: Canvas,
+                 sizeCell: int, xLeftChessBoard: int, yTopChessBoard: int,
                  name: str, color: str, xCell: int, yCell: int):
         super().__init__(canvas, sizeCell, xLeftChessBoard, yTopChessBoard,
-                 name, color, xCell, yCell)
+                         name, color, xCell, yCell)
         self.movement = list()
-
 
     def drawPiece(self):
         self.drawRook(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                      self.yTopChessBoard  + self.yCell * self.sizeCell)
-                          
+                      self.yTopChessBoard + self.yCell * self.sizeCell)
 
     def drawRook(self, x, y):
         # крышка ладьи
@@ -49,8 +46,8 @@ class Rook(ChessPiece):
 
              x + self.sizeCell * 0.65, y + self.sizeCell * 0.43,
              x + self.sizeCell * 0.35, y + self.sizeCell * 0.43
-            ],
-            outline = self.colorBorder, fill = self.color, width = 2
+             ],
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         # тело ладьи
@@ -59,15 +56,15 @@ class Rook(ChessPiece):
              x + self.sizeCell * 0.65, y + self.sizeCell * 0.43,
              x + self.sizeCell * 0.7,  y + self.sizeCell * 0.75,
              x + self.sizeCell * 0.3,  y + self.sizeCell * 0.75
-            ],
-            outline = self.colorBorder, fill = self.color, width = 2
+             ],
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         # подставка ладьи
         self.canvas.create_rectangle(
             x + self.sizeCell * 0.2, y + self.sizeCell * 0.75,
             x + self.sizeCell * 0.8, y + self.sizeCell * 0.87,
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
     # нахождение списка всех возможных ходов ладьи
@@ -80,7 +77,7 @@ class Rook(ChessPiece):
             anotherChessBool = bChessBool
         else:
             myChessBool = bChessBool
-            anotherChessBool = wChessBool    
+            anotherChessBool = wChessBool
 
         # добавление ходов вверх
         x = self.xCell
@@ -119,7 +116,7 @@ class Rook(ChessPiece):
         # добавление ходов вниз
         x = self.xCell
         y = self.yCell + 1
-        
+
         while y <= 7:
             # путь перегораживает своя фигура
             if myChessBool[y][x]:
@@ -151,4 +148,3 @@ class Rook(ChessPiece):
             x -= 1
 
         return self.movement
-    

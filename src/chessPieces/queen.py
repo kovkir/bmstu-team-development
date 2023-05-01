@@ -1,6 +1,4 @@
-from tkinter import Canvas, CENTER
-from color import *
-
+from tkinter import Canvas
 from chessPieces.chessPiece import ChessPiece
 
 
@@ -18,18 +16,16 @@ class Queen(ChessPiece):
 
     movement: list
 
-
-    def __init__(self, canvas: Canvas, sizeCell: int, xLeftChessBoard: int, yTopChessBoard: int,
+    def __init__(self, canvas: Canvas,
+                 sizeCell: int, xLeftChessBoard: int, yTopChessBoard: int,
                  name: str, color: str, xCell: int, yCell: int):
         super().__init__(canvas, sizeCell, xLeftChessBoard, yTopChessBoard,
-                 name, color, xCell, yCell)
+                         name, color, xCell, yCell)
         self.movement = list()
-
 
     def drawPiece(self):
         self.drawQueen(self.xLeftChessBoard + self.xCell * self.sizeCell,
-                       self.yTopChessBoard  + self.yCell * self.sizeCell)
-                          
+                       self.yTopChessBoard + self.yCell * self.sizeCell)
 
     def drawQueen(self, x, y):
         # тело ферзя
@@ -43,39 +39,39 @@ class Queen(ChessPiece):
              x + self.sizeCell * 0.71,  y + self.sizeCell * 0.47,
              x + self.sizeCell * 0.875, y + self.sizeCell * 0.32,
              x + self.sizeCell * 0.7,   y + self.sizeCell * 0.75],
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         # кружки на короне ферзя слева направо
         self.canvas.create_oval(
             x + self.sizeCell * 0.07, y + self.sizeCell * 0.255,
             x + self.sizeCell * 0.2, y + self.sizeCell * 0.375,
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         self.canvas.create_oval(
             x + self.sizeCell * 0.31, y + self.sizeCell * 0.185,
             x + self.sizeCell * 0.43, y + self.sizeCell * 0.305,
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         self.canvas.create_oval(
             x + self.sizeCell * 0.56,  y + self.sizeCell * 0.185,
             x + self.sizeCell * 0.69,  y + self.sizeCell * 0.305,
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         self.canvas.create_oval(
             x + self.sizeCell * 0.80,  y + self.sizeCell * 0.255,
             x + self.sizeCell * 0.93,  y + self.sizeCell * 0.375,
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
         # подставка ферзя
         self.canvas.create_rectangle(
             x + self.sizeCell * 0.2, y + self.sizeCell * 0.75,
             x + self.sizeCell * 0.8, y + self.sizeCell * 0.87,
-            outline = self.colorBorder, fill = self.color, width = 2
+            outline=self.colorBorder, fill=self.color, width=2
         )
 
     # нахождение списка всех возможных ходов ферзя
@@ -88,7 +84,7 @@ class Queen(ChessPiece):
             anotherChessBool = bChessBool
         else:
             myChessBool = bChessBool
-            anotherChessBool = wChessBool    
+            anotherChessBool = wChessBool
 
         # добавление ходов вверх
         x = self.xCell
@@ -127,7 +123,7 @@ class Queen(ChessPiece):
         # добавление ходов вниз
         x = self.xCell
         y = self.yCell + 1
-        
+
         while y <= 7:
             # путь перегораживает своя фигура
             if myChessBool[y][x]:
@@ -197,7 +193,7 @@ class Queen(ChessPiece):
         # добавление ходов вниз налево по диагонали
         x = self.xCell - 1
         y = self.yCell + 1
-        
+
         while x >= 0 and y <= 7:
             # путь перегораживает своя фигура
             if myChessBool[y][x]:
@@ -231,4 +227,3 @@ class Queen(ChessPiece):
             y += 1
 
         return self.movement
-    
