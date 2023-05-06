@@ -1,0 +1,6 @@
+*.DS_Store
+*.vscode
+
+src/__pycache__*
+src/chessPieces/__pycache__*
+unitTests/__pycache__*
