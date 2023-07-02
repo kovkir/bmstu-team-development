@@ -3,5 +3,4 @@
 ## Пример работы программы
 
 ![](./imgs/white_board.png)
-
-![](./imgs/white_board.png)
+![](./imgs/black_board.png)
